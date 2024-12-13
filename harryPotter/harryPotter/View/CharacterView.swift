@@ -1,15 +1,31 @@
-//
-//  CharacterView.swift
-//  harryPotter
-//
-//  Created by ÖMER  on 13.12.2024.
-//
-
 import SwiftUI
 
 struct CharacterView: View {
+    
+    @StateObject var viewModel = HarryPotterViewModel()
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Group{
+            if viewModel.isLoading {
+                VStack{
+                    ProgressView()
+                        .padding()
+                    Text("Loading Books...")
+                        .padding()
+                }
+            }else{
+                ScrollView {
+                    VStack {
+                        ForEach(viewModel.characters) { person in
+                            CharacterComponent(person: person)
+                        }
+                    }
+                }
+                .padding(.bottom , 75)
+            }
+        }.onAppear{
+            viewModel.fetchCharacters()
+        }
     }
 }
 
